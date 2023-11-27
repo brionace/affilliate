@@ -6,14 +6,17 @@ const prisma = new PrismaClient();
 export const POST = async ({ request }) => {
 	const { id } = await request.json();
 
-	const products = await prisma.product.findMany({
+	const product = await prisma.product.findFirst({
 		where: {
-			published: false,
+			published: true,
 			AND: {
-				id: { in: id }
+				id: Number(id)
 			}
+			// AND: {
+			// 	id: { in: idArray }
+			// }
 		},
-		take: 20,
+		// take: 20,
 		select: {
 			id: true,
 			url: true,
@@ -23,19 +26,15 @@ export const POST = async ({ request }) => {
 		}
 	});
 
-	if (products) {
-		return json(
-			products.map((product) => {
-				return {
-					id: product.id,
-					name: product.name,
-					images: JSON.parse(product.images),
-					url: product.url,
-					price: product.price
-				};
-			})
-		);
+	if (product) {
+		return json({
+			id: product.id,
+			name: product.name,
+			images: JSON.parse(product.images),
+			url: product.url,
+			price: product.price
+		});
 	}
 
-	throw error(500, 'failed to get products');
+	throw error(500, 'failed to get product');
 };

@@ -1,10 +1,11 @@
 <script>
 	// @ts-nocheck
-	import Header from '$lib/header.svelte';
 	import Search from '$lib/search.svelte';
 	import { product } from '$lib/store';
 	import { get } from 'svelte/store';
 	import { createEventDispatcher } from 'svelte';
+	import { AppBar } from '@skeletonlabs/skeleton';
+	import { icons } from '$lib/icons';
 
 	const dispatch = createEventDispatcher();
 
@@ -68,25 +69,19 @@
 	}
 </script>
 
-<Header>
-	<nav>
-		<ul class="flex flex-wrap items-center gap-4">
-			<li>
-				<a href="/">Home</a>
-			</li>
-			<li>
-				<a href="/admin/moderation">Moderation</a>
-			</li>
-		</ul>
-	</nav>
-	<div>
-		<Search />
-	</div>
-	<div>
-		<button type="button" class="btn btn-sm variant-filled" on:click={() => saveToDB()}>SAVE</button
-		>
-	</div>
-</Header>
+<AppBar gridColumns="grid-cols-3" slotDefault="place-self-center" slotTrail="place-content-end">
+	<svelte:fragment slot="lead">
+		<a href="/">
+			<span class="block w-6">{@html icons({ name: 'logo' })}</span>
+		</a>
+	</svelte:fragment>
+	<Search />
+	<svelte:fragment slot="trail"
+		><button type="button" class="btn btn-sm variant-filled" on:click={() => saveToDB()}
+			>SAVE</button
+		></svelte:fragment
+	>
+</AppBar>
 {#if parsedData}
 	<div>
 		<div class="flex flex-col flex-row-reverse overflow-hidden h-full">

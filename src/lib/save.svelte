@@ -51,5 +51,5 @@
 		fillSVG = true;
 	}}
 >
-	<span class="w-6">{@html icons('heart', fillSVG)}</span>
+	<span class="w-6">{@html icons({ name: 'heart', fill: fillSVG })}</span>
 </button>

@@ -23,14 +23,14 @@
 </script>
 
 <Header>
-	<div>
+	<div class="text-sm">
 		<a href="/" class="flex items-center gap-3">
-			<span class="w-6">{@html icons('logo')}</span>
+			<span class="w-6">{@html icons({ name: 'logo' })}</span>
 			<span class="hidden md:inline">Pardycat</span>
 		</a>
 	</div>
 	<div
-		class="absolute left-1/2 transform -translate-x-1/2 translate-y-2 bg-[#ef4644] rounded-t-lg px-4 py-2"
+		class="absolute left-1/2 transform -translate-x-1/2 translate-y-2 bg-[#ef4644] rounded-t-lg px-4 py-2 text-sm"
 	>
 		<button on:click={() => handleClick()} class="text-white">Browse</button>
 	</div>

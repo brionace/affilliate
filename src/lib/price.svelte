@@ -11,13 +11,13 @@
 	export let price;
 </script>
 
-<a href={url} class="flex gap-3 items-center" target="_blank">
-	<span class="price-tag bg-[#ef4644] text-white">{price}</span>
-	<span class="w-8">{@html icons('amazon')}</span>
+<a href={url} class="flex gap-1" target="_blank">
+	<span>{price}</span>
+	<span class="w-8">{@html icons({ name: 'amazon' })}</span>
 </a>
 
 <style>
-	.price-tag {
+	/* .price-tag {
 		border-radius: 5px 0 0 5px;
 		cursor: pointer;
 		display: inline-block;
@@ -42,5 +42,5 @@
 		transform: rotate(45deg);
 		width: 24px;
 		z-index: -1;
-	}
+	} */
 </style>

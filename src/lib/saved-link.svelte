@@ -12,5 +12,5 @@
 </script>
 
 <a href="/saved" class="block w-6">
-	{@html icons('heart', hasSavedProducts)}
+	{@html icons({ name: 'heart', fill: hasSavedProducts })}
 </a>

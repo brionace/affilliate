@@ -82,9 +82,9 @@ export async function fetchCategory(fetch: typeof window.fetch, slug: string) {
 	}
 }
 
-export async function fetchProduct(fetch: typeof window.fetch, id: string[]) {
+export async function fetchProduct(fetch: typeof window.fetch, id: string) {
 	try {
-		const response = await fetch('/api/prod', {
+		const response = await fetch('/api/product', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'

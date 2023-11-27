@@ -12,5 +12,5 @@
 </script>
 
 <button class="w-6 visible group-hover:visible" on:click={() => handleShare()}>
-	<span class="w-6">{@html icons('share')}</span>
+	<span class="w-6">{@html icons({ name: 'share' })}</span>
 </button>

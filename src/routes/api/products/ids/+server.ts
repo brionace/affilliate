@@ -9,7 +9,7 @@ export const POST = async ({ request }) => {
 
 	const products = await prisma.product.findMany({
 		where: {
-			published: false,
+			published: true,
 			AND: {
 				id: { in: parsedId }
 			}

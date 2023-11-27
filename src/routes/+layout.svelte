@@ -1,6 +1,8 @@
 <script lang="ts">
-	import Header from '$lib/header.svelte';
 	import '../app.postcss';
+
+	import { initializeStores } from '@skeletonlabs/skeleton';
+	initializeStores();
 
 	// Floating UI for Popups
 	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';

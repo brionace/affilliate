@@ -1,11 +1,15 @@
 <script>
 	import { error, fail } from '@sveltejs/kit';
 	import { createEventDispatcher } from 'svelte';
+	import { getDrawerStore } from '@skeletonlabs/skeleton';
+	import { icons } from './icons';
+
+	const drawerStore = getDrawerStore();
 
 	const dispatch = createEventDispatcher();
 
 	/**
-	 * @type {{id: number, name: string}[]}
+	 * @type {{id: number, name: string, slug: string}[]}
 	 */
 	export let categories;
 
@@ -49,10 +53,11 @@
 	// }
 </script>
 
-<ul class="flex gap-4">
+<ul class="flex justify-center gap-4">
 	{#each categories as category}
-		<li class="p-4">
-			<a href={category.name.toLowerCase().replace(' ', '-')}>{category.name}</a>
+		<li class="flex justify-center gap-3 p-2 border border-black">
+			<span class="block w-6">{@html icons({ name: category.slug })}</span>
+			<a href={`/${category.slug}`} on:click={() => drawerStore.close()}>{category.name}</a>
 		</li>
 	{:else}
 		<p>loading...</p>
