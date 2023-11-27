@@ -46,6 +46,7 @@
   "type": "module",
   "dependencies": {
     "@floating-ui/dom": "1.5.3",
-    "@prisma/client": "5.5.2"
+    "@prisma/client": "5.5.2",
+    "dotenv": "^16.3.1"
   }
 }
