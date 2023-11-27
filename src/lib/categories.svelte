@@ -55,7 +55,7 @@
 
 <ul class="flex justify-center gap-4">
 	{#each categories as category}
-		<li class="flex justify-center gap-3 p-2 border border-black">
+		<li class="flex justify-center gap-3 p-2 variant-soft-secondary">
 			<span class="block w-6">{@html icons({ name: category.slug })}</span>
 			<a href={`/${category.slug}`} on:click={() => drawerStore.close()}>{category.name}</a>
 		</li>
