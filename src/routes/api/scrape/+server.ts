@@ -2,7 +2,9 @@ import { chromium } from '@playwright/test';
 // import { chromium, firefox } from 'playwright-extra';
 // import stealth from 'puppeteer-extra-plugin-stealth';
 import { json, error } from '@sveltejs/kit';
-import { OPENAI_API_KEY } from '$env/static/private';
+import { env } from '$env/dynamic/private';
+
+const { OPENAI_API_KEY } = env;
 
 // Add the plugin to playwright (any number of plugins can be added)
 // chromium.use(stealth());
