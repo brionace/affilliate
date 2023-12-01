@@ -4,7 +4,7 @@
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
-		"build": "vite build",
+		"build": "npx prisma generate && vite build",
 		"preview": "vite preview",
 		"test": "npm run test:integration && npm run test:unit",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -47,6 +47,9 @@
 	"dependencies": {
 		"@floating-ui/dom": "1.5.3",
 		"@prisma/client": "5.5.2",
-		"dotenv": "^16.3.1"
+		"@sveltejs/adapter-static": "^2.0.3",
+		"crawlee": "^3.6.2",
+		"dotenv": "^16.3.1",
+		"playwright": "^1.40.1"
 	}
 }
