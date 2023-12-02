@@ -15,7 +15,7 @@ export const POST = async ({ request }) => {
 	});
 
 	if (findProduct) {
-		throw error(400, 'duplicate product');
+		throw error(400, 'DUPLICATE');
 	}
 
 	const savedProduct = await prisma.product.create({
@@ -26,7 +26,7 @@ export const POST = async ({ request }) => {
 			url,
 			category,
 			updatedAt: new Date(),
-			published: false
+			published: true
 		}
 	});
 
