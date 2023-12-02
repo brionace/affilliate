@@ -48,6 +48,7 @@
 		"@floating-ui/dom": "1.5.3",
 		"@prisma/client": "5.5.2",
 		"@sveltejs/adapter-static": "^2.0.3",
+		"cheerio": "1.0.0-rc.12",
 		"crawlee": "^3.6.2",
 		"dotenv": "^16.3.1",
 		"playwright": "^1.40.1"

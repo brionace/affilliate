@@ -9,17 +9,26 @@
 
 	const dispatch = createEventDispatcher();
 
+	/** @type {import('./$types').PageData} */
 	export let data;
 	const { categories } = data;
 	const products = get(product);
 
-	const parsedData = products ? JSON.parse(products) : null;
+	/** @type {import('./$types').ActionData} */
+	export let form;
+
+	if (form) {
+		product.set(JSON.stringify(form));
+	}
+
+	const parsedData = JSON.parse(products);
 
 	const url = parsedData?.url;
-	let tags = categories;
 	let images = parsedData?.images;
 	let name = parsedData?.name;
 	let price = parsedData?.price;
+
+	let tags = categories;
 	let selectedCategory = '';
 	let selectedTags = [];
 	let category = null;
@@ -82,6 +91,16 @@
 		></svelte:fragment
 	>
 </AppBar>
+
+<div class="h-screen flex justify-center items-center">
+	<form method="POST" action="?/add">
+		<div class="flex gap-1">
+			<input type="text" name="url" class="input" placeholder="Enter a URL" />
+			<button type="submit" class="btn">Search</button>
+		</div>
+	</form>
+</div>
+
 {#if parsedData}
 	<div>
 		<div class="flex flex-col flex-row-reverse overflow-hidden h-full">
@@ -184,9 +203,5 @@
 				</div>
 			</section>
 		</div>
-	</div>
-{:else}
-	<div class="h-screen flex justify-center items-center">
-		<p class="text-center">Find a product using the search box</p>
 	</div>
 {/if}

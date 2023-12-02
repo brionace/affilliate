@@ -1,6 +1,9 @@
-<script>
+<script lang="ts">
 	import { product } from '$lib/store';
 	import { error } from '@sveltejs/kit';
+	import * as cheerio from 'cheerio';
+
+	const OPENAI_API_KEY = import.meta.env.OPENAI_API_KEY;
 
 	// @ts-ignore
 	async function search(event) {
@@ -8,27 +11,34 @@
 		const query = target.value;
 
 		if (isValidUrl(query)) {
-			const response = await fetch('/api/scrape', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({ query })
-			});
+			// try {
+			// 	const response = await fetch('/api/scrape', {
+			// 		method: 'POST',
+			// 		headers: {
+			// 			'Content-Type': 'application/json'
+			// 		},
+			// 		body: JSON.stringify({ query })
+			// 	});
+			// 	const data = await response.json();
 
-			if (!response.ok) {
-				console.error(response);
-				throw error(500, 'unsuccesful response');
-			}
+			// 	const { name, images, url, price } = data;
 
-			const data = await response.json();
-			const { name, images, url, price } = data;
+			// 	product.set(JSON.stringify({ name, images, url, price }));
+			// 	target.value = '';
+			// 	window.location.reload();
+			// } catch (error) {
+			// 	console.error(error);
+			// 	return 'unsuccesful response';
+			// }
+
+
+			const { name, images, url: query, price } = await cheerioFunc(query);
 
 			if (!name || !images) {
-				throw error(500, 'unsuccesful response');
+				throw error(400, 'failed to scrape');
 			}
 
-			product.set(JSON.stringify({ name: name.replace(/['"]+/g, ''), images, url, price }));
+			product.set(JSON.stringify({ name, images, url, price }));
 			target.value = '';
 			window.location.reload();
 		}
@@ -46,6 +56,71 @@
 			'i'
 		); // validate fragment locator
 		return !!urlPattern.test(urlString);
+	}
+
+	async function regenerateTitle(title: string) {
+		try {
+			const request = await fetch(
+				'https://api.deepinfra.com/v1/inference/codellama/CodeLlama-34b-Instruct-hf',
+				{
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: `Bearer ${OPENAI_API_KEY}`
+					},
+					body: JSON.stringify({
+						input: `{{#system~}}Acting as a product expert, Rewrite the following title to be more friendly and helpful. You must only return the rewritten title. You must return the text without any quotes.\n\n{{~/system}}
+					[INST]${title.trim()}[/INST]`,
+						max_new_tokens: 128,
+						temperature: 0
+					})
+				}
+			);
+			const requestJSON = await request.json();
+			return await requestJSON.results[0].generated_text.trim();
+		} catch (error) {
+			console.error(error);
+			return 'Failed to generate title';
+		}
+	}
+
+	function matchPrice(text: string) {
+		// TODO add dynamic currency
+		return text.match('/£d+(?:.d+)?/');
+	}
+
+	async function fetchHTML(url: string) {
+		const response = await fetch(url);
+		return await response.text();
+	}
+
+	async function extractData(html: string) {
+		const $ = cheerio.load(html);
+
+		const title = await regenerateTitle($('h1').text());
+		const name: string = title.replace(/["]+/g, '').trim();
+		// const price: string = `${$('.a-price-symbol').text()}  ${$('.a-price-whole').text()}  ${$(
+		// 	'.a-price-fraction'
+		// ).text()}`;
+		const price: string = $('#apex_desktop [class$="-offscreen"]').text().trim();
+		const images: string[] = [];
+		$('#altImages li').each((_, e) => {
+			const imgSrc = $(e)?.find('img')?.attr('src')?.replace(/._.*_/, '');
+			if (imgSrc) images.push(imgSrc);
+		});
+
+		return { name, price, images };
+	}
+
+	async function cheerioFunc(url: string) {
+		try {
+			const html = await fetchHTML(url);
+			const data = await extractData(html);
+
+			return data;
+		} catch (error: unknown) {
+			if (error instanceof Error) console.error(`Failed to crawl "${url}": ${error?.message}`);
+		}
 	}
 </script>
 

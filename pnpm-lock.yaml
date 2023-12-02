@@ -14,6 +14,9 @@ dependencies:
   '@sveltejs/adapter-static':
     specifier: ^2.0.3
     version: 2.0.3(@sveltejs/kit@1.20.4)
+  cheerio:
+    specifier: 1.0.0-rc.12
+    version: 1.0.0-rc.12
   crawlee:
     specifier: ^3.6.2
     version: 3.6.2(playwright@1.40.1)
