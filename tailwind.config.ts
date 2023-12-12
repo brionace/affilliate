@@ -11,7 +11,12 @@ export default {
 		join(require.resolve('@skeletonlabs/skeleton'), '../**/*.{html,js,svelte,ts}')
 	],
 	theme: {
-		extend: {}
+		extend: {
+			screens: {
+				xsm: '375px'
+				// => @media (min-width: 375px) { ... }
+			}
+		}
 	},
 	plugins: [
 		forms,

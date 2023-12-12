@@ -1,19 +1,13 @@
-import { fetchCategories, fetchCategory, fetchProducts, fetchProduct } from '$lib/fetch';
+import { fetchProductsInCategory, fetchProduct } from '$lib/utilities/fetch';
 
-export async function load({ fetch, params }) {
-	const { slug } = params;
-
-	if (!isNaN(parseInt(slug))) {
-		const id = slug;
+export async function load({ fetch, params: { slug } }) {
+	if (isNaN(parseInt(slug))) {
 		return {
-			product: await fetchProduct(fetch, id),
-			categories: await fetchCategories(fetch)
+			products: await fetchProductsInCategory(fetch, slug)
 		};
 	}
 
 	return {
-		products: await fetchProducts(fetch, slug),
-		categories: await fetchCategories(fetch),
-		category: await fetchCategory(fetch, slug)
+		product: await fetchProduct(fetch, slug)
 	};
 }

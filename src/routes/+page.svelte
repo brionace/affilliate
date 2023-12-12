@@ -1,51 +1,71 @@
 <script lang="ts">
-	// @ts-nocheck
 	import Head from '$lib/head.svelte';
-	import List from '$lib/list.svelte';
-	import { AppBar } from '@skeletonlabs/skeleton';
-	import { Drawer, getDrawerStore } from '@skeletonlabs/skeleton';
-	import Categories from '$lib/categories.svelte';
-	import SavedLink from '$lib/saved-link.svelte';
-	import { icons } from '$lib/icons';
-	import { drawerSettings } from '$lib/utils';
+	import ProductsList from '$lib/components/ProductsList.svelte';
+	import { error } from '@sveltejs/kit';
+	import { Toast, getToastStore } from '@skeletonlabs/skeleton';
+	import type { ToastSettings, ToastStore } from '@skeletonlabs/skeleton';
+	import type { ProductsResponse } from '$lib/utilities/types.js';
 
-	const drawerStore = getDrawerStore();
+	const toastStore = getToastStore();
 
 	export let data;
-	let lazyLoaded;
 
-	lazyLoaded = lazyloader(data);
+	$: ({ products } = data);
 
-	$: data = lazyLoaded;
+	async function fetchMoreProducts(products: ProductsResponse, url: string) {
+		const { list, meta } = products;
+		let toastId: string | null = null;
 
-	$: ({ products, categories } = data);
+		if (list.length === meta?.count) {
+			// const t: ToastSettings = {
+			// 	message: `Completed loading ${meta?.count} products`,
+			// };
 
-	function lazyloader(data) {
-		return data;
+			// toastId = toastStore.trigger(t);
+
+			return;
+		}
+
+		const t: ToastSettings = {
+			message: `Loading ${list.length}/${meta?.count}`,
+			autohide: false
+		};
+
+		toastId = toastStore.trigger(t);
+
+		// /api/products/incategory/${slug}?take=${take}&cursor=${cursor}
+		try {
+			const response = await fetch(url);
+			const returnedData = await response.json();
+
+			if (!response.ok) {
+				throw error(500, response.statusText);
+			}
+
+			data.products = {
+				list: list.concat(returnedData.list),
+				meta: { ...returnedData.meta }
+			};
+
+			return;
+		} catch (err) {
+			if (err instanceof Error) {
+				throw error(500, err.message);
+			}
+		} finally {
+			toastStore.close(toastId);
+		}
 	}
 </script>
 
 <Head title="Pardycat" description="Find your next party outfit or fancy dress like a boss" />
 
-<AppBar gridColumns="grid-cols-3" slotDefault="place-self-center" slotTrail="place-content-end">
-	<svelte:fragment slot="lead">
-		<div class="flex gap-2">
-			<a href="/">
-				<span class="block w-6">{@html icons({ name: 'logo' })}</span>
-			</a>
-			<span class="hidden md:inline">Pardycat</span>
-		</div>
-	</svelte:fragment>
-	<button on:click={() => drawerStore.open(drawerSettings)}>Browse</button>
-	<svelte:fragment slot="trail"><SavedLink /></svelte:fragment>
-</AppBar>
-
-<Drawer>
-	<div class="p-4">
-		<Categories {categories} />
-	</div>
-</Drawer>
-
-<main>
-	<List {products} />
+<main class="my-11">
+	<ProductsList
+		{products}
+		on:loadMore={(e) =>
+			fetchMoreProducts(products, `/api/products?take=${e.detail.take}&cursor=${e.detail.cursor}`)}
+	/>
 </main>
+
+<Toast />

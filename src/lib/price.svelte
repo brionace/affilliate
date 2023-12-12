@@ -1,5 +1,5 @@
 <script>
-	import { icons } from '$lib/icons';
+	import { icons } from '$lib/utilities/icons';
 
 	/**
 	 * @type {string}
@@ -13,7 +13,7 @@
 
 <a href={url} class="flex gap-1" target="_blank">
 	<span>{price}</span>
-	<span class="w-8">{@html icons({ name: 'amazon' })}</span>
+	<!-- <span class="w-8">{@html icons({ name: 'amazon' })}</span> -->
 </a>
 
 <style>

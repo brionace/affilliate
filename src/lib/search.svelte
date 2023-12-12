@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { product } from '$lib/store';
+	import { product } from '$lib/utilities/store';
 	import { error } from '@sveltejs/kit';
 	import * as cheerio from 'cheerio';
 

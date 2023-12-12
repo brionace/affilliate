@@ -5,10 +5,9 @@ const prisma = new PrismaClient();
 
 export const GET = async () => {
 	const categories = await prisma.category.findMany({
-		where: {
-			published: true
+		orderBy: {
+			id: 'desc'
 		},
-		orderBy: { name: 'asc' },
 		select: { id: true, name: true, slug: true }
 	});
 

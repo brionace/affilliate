@@ -1,5 +1,5 @@
-import { fetchCategories } from '$lib/fetch';
-import { isValidUrl } from '$lib/utils';
+import { fetchCategories } from '$lib/utilities/fetch';
+import { isValidUrl } from '$lib/utilities';
 
 export async function load({ fetch }) {
 	return {

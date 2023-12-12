@@ -1,11 +1,11 @@
 <script lang="ts">
 	// @ts-nocheck
 	import Header from '$lib/header.svelte';
-	import { icons } from '$lib/icons';
+	import { icons } from '$lib/utilities/icons';
 	import SavedLink from '$lib/saved-link.svelte';
 	import { set } from 'svelte/store';
 	import { onMount } from 'svelte';
-	import { nav_status } from '$lib/store';
+	import { nav_status } from '$lib/utilities/store';
 
 	const navStatuses = {
 		show: show,

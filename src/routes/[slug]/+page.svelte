@@ -1,76 +1,83 @@
 <script lang="ts">
-	// @ts-nocheck
-	import List from '$lib/list.svelte';
-	import { icons } from '$lib/icons';
+	import ProductsList from '$lib/components/ProductsList.svelte';
 	import Price from '$lib/price.svelte';
-	import Save from '$lib/save.svelte';
-	import Share from '$lib/share.svelte';
+	import Save from '$lib/components/Save.svelte';
+	import Share from '$lib/components/Share.svelte';
 	import Head from '$lib/head.svelte';
-	import { AppBar } from '@skeletonlabs/skeleton';
-	import { Drawer, getDrawerStore } from '@skeletonlabs/skeleton';
-	import Categories from '$lib/categories.svelte';
-	import SavedLink from '$lib/saved-link.svelte';
-	import { drawerSettings } from '$lib/utils';
+	import { error, fail } from '@sveltejs/kit';
+	import type { ProductsResponse } from '$lib/utilities/types.js';
+	import { Toast, getToastStore } from '@skeletonlabs/skeleton';
+	import type { ToastSettings, ToastStore } from '@skeletonlabs/skeleton';
 
-	const drawerStore = getDrawerStore();
+	const toastStore = getToastStore();
 
 	export let data;
-	let lazyLoaded;
 
-	lazyLoaded = lazyloader(data);
+	$: data = data;
+	$: ({ products, product } = data);
+	$: ({ name, description, slug } = data.category ? data.category : {});
 
-	$: data = lazyLoaded;
+	async function fetchProductsInCategory(products: ProductsResponse, url: string) {
+		const { list, meta } = products;
+		let toastId: string | null = null;
 
-	$: ({ products, categories, category, product } = data);
+		if (list.length === meta?.count) {
+			// const t: ToastSettings = {
+			// 	message: `Completed loading ${meta?.count} products`,
+			// };
 
-	function lazyloader(data) {
-		return data;
-	}
+			// toastId = toastStore.trigger(t);
 
-	function handleShare(id) {
-		console.log(id);
+			return;
+		}
+
+		const t: ToastSettings = {
+			message: `Loading ${list.length}/${meta?.count}`,
+			autohide: false
+		};
+
+		toastId = toastStore.trigger(t);
+
+		try {
+			const response = await fetch(url);
+			const returnedData = await response.json();
+
+			if (!response.ok) {
+				throw error(500, response.statusText);
+			}
+
+			data.products = {
+				list: list.concat(returnedData.list),
+				meta: { ...returnedData.meta }
+			};
+
+			return;
+		} catch (err) {
+			if (err instanceof Error) {
+				throw error(500, err.message);
+			}
+		} finally {
+			toastStore.close(toastId);
+		}
 	}
 </script>
 
-<AppBar gridColumns="grid-cols-3" slotDefault="place-self-center" slotTrail="place-content-end">
-	<svelte:fragment slot="lead">
-		<div class="flex gap-2">
-			<a href="/">
-				<span class="block w-6">{@html icons({ name: 'logo' })}</span>
-			</a>
-			<span class="hidden md:inline">Pardycat</span>
-		</div>
-	</svelte:fragment>
-	<button on:click={() => drawerStore.open(drawerSettings)}>
-		{#if category}
-			<span class="flex justify-center gap-3">
-				<span class="block w-6">{@html icons({ name: category[0].slug })}</span>
-				<span class="hidden md:inline-block">{category[0].name}</span>
-			</span>
-		{:else}
-			Browse
-		{/if}
-	</button>
-	<svelte:fragment slot="trail"><SavedLink /></svelte:fragment>
-</AppBar>
+<Head title={name ?? product.name} {description} />
 
-<Drawer>
-	<div class="p-4">
-		<Categories {categories} />
-	</div>
-</Drawer>
+<main class="my-11">
+	{#if products && !product}
+		<ProductsList
+			{products}
+			on:loadMore={(e) =>
+				fetchProductsInCategory(
+					products,
+					`/api/products/incategory?take=${e.detail.take}&cursor=${e.detail.cursor}`
+				)}
+		/>
+	{/if}
 
-{#if products}
-	<Head title={category[0].name} description={category[0].description} />
-	<main>
-		<List {products} />
-	</main>
-{/if}
-
-{#if product}
-	<Head title={product.name} />
-	<main>
-		<div class="group mx-auto mt-11 w-80 transform overflow-hidden duration-300">
+	{#if product}
+		<div class="group mx-auto w-80 transform overflow-hidden duration-300">
 			<div
 				class="snap-x hover:snap-x scroll-px-6 snap-mandatory scroll-smooth flex overflow-x-auto bg-white rounded-t-lg"
 			>
@@ -80,7 +87,7 @@
 					</div>
 				{/each}
 			</div>
-			<div class="flex flex-col py-4 gap-4 max-w-md m-auto">
+			<div class="flex flex-col px-4 xsm:px-0 py-4 gap-4 max-w-md m-auto">
 				<div class="flex gap-4 justify-between items-start">
 					<Price url={product.url} price={product.price} />
 					<div class="flex gap-3">
@@ -93,5 +100,7 @@
 				</p>
 			</div>
 		</div>
-	</main>
-{/if}
+	{/if}
+</main>
+
+<Toast />

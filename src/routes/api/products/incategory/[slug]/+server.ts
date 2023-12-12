@@ -3,7 +3,8 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export const GET = async ({ url }) => {
+export const GET = async ({ params, url }) => {
+	const { slug } = params;
 	const take = url.searchParams.get('take');
 	const lastCursor = url.searchParams.get('cursor');
 
@@ -22,7 +23,10 @@ export const GET = async ({ url }) => {
 		}),
 		orderBy: { updatedAt: 'desc' },
 		where: {
-			published: true
+			published: true,
+			AND: {
+				category: { contains: slug }
+			}
 		},
 		select: {
 			id: true,
@@ -33,26 +37,20 @@ export const GET = async ({ url }) => {
 		}
 	});
 
-
-	if (!products) {
-		throw error(500, 'failed to get products');
-	}
-
 	const lastProductInResults = products[products.length - 1];
 	const cursor = lastProductInResults.id;
+
+	if (!products) {
+		throw error(500, 'failed to get products in category');
+	}
 
 	return json({
 		list: products.map((product) => {
 			return {
-				id: product.id,
 				name: product.name,
 				images: JSON.parse(product.images),
 				url: product.url,
-				price: product.price,
-				meta: {
-					total: products.length,
-					cursor: cursor
-				}
+				price: product.price
 			};
 		}),
 		meta: {
