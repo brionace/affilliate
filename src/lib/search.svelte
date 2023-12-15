@@ -6,41 +6,54 @@
 	const OPENAI_API_KEY = import.meta.env.OPENAI_API_KEY;
 
 	// @ts-ignore
-	async function search(event) {
+	async function handleSearch(event) {
 		const target = event.target.query;
-		const query = target.value;
+		const value = target.value;
 
-		if (isValidUrl(query)) {
+		if (isValidUrl(value)) {
+			console.log({ value });
+			try {
+				const response = await fetch('/api/scrape', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({ value })
+				});
+				const data = await response.json();
+
+				const { name, images, url, price } = data;
+
+				product.set(JSON.stringify({ name, images, url, price }));
+				// target.value = '';
+				window.location.href = '/admin/products/create';
+			} catch (error) {
+				console.error(error);
+				return 'unsuccesful response';
+			}
+
 			// try {
-			// 	const response = await fetch('/api/scrape', {
-			// 		method: 'POST',
-			// 		headers: {
-			// 			'Content-Type': 'application/json'
-			// 		},
-			// 		body: JSON.stringify({ query })
-			// 	});
-			// 	const data = await response.json();
+			// 	const result = await cheerioFunc(value);
 
-			// 	const { name, images, url, price } = data;
+			// 	if (!result?.name || !result?.images) {
+			// 		throw error(400, 'failed to scrape');
+			// 	}
 
-			// 	product.set(JSON.stringify({ name, images, url, price }));
+			// 	product.set(
+			// 		JSON.stringify({
+			// 			name: result.name,
+			// 			images: result.images,
+			// 			url: value,
+			// 			price: result.price
+			// 		})
+			// 	);
+
 			// 	target.value = '';
 			// 	window.location.reload();
 			// } catch (error) {
 			// 	console.error(error);
 			// 	return 'unsuccesful response';
 			// }
-
-
-			const { name, images, url: query, price } = await cheerioFunc(query);
-
-			if (!name || !images) {
-				throw error(400, 'failed to scrape');
-			}
-
-			product.set(JSON.stringify({ name, images, url, price }));
-			target.value = '';
-			window.location.reload();
 		}
 	}
 
@@ -115,6 +128,7 @@
 	async function cheerioFunc(url: string) {
 		try {
 			const html = await fetchHTML(url);
+			console.log(html);
 			const data = await extractData(html);
 
 			return data;
@@ -124,7 +138,7 @@
 	}
 </script>
 
-<form on:submit|preventDefault={search} method="POST">
+<form on:submit|preventDefault={handleSearch} method="POST">
 	<div class="flex gap-1">
 		<input type="text" name="query" class="input" placeholder="Search a product or Enter a URL" />
 		<button type="submit" class="btn">Search</button>

@@ -2,7 +2,7 @@ import { error } from '@sveltejs/kit';
 
 async function fetchCategory(fetch: typeof window.fetch, id: string) {
 	try {
-		const response = await fetch('/api/admin/categories/'+ id);
+		const response = await fetch('/api/admin/categories/' + id);
 		const data = await response.json();
 
 		if (!response.ok) {

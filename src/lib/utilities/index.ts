@@ -5,11 +5,11 @@ export const drawerSettings: DrawerSettings = {
 	// Provide your property overrides:
 	bgDrawer: 'bg-white',
 	bgBackdrop: 'bg-gradient-to-tr from-indigo-500/50 via-purple-500/50 to-pink-500/50',
-	// width: 'w-[280px] md:w-[480px]',
+	width: 'w-[280px] md:w-[480px]',
 	padding: 'p-4',
 	rounded: 'rounded-xl',
-	position: 'top',
-	height: 'h-auto'
+	position: 'left',
+	height: 'h-full'
 };
 
 export function isValidUrl(urlString: string) {

@@ -20,8 +20,6 @@
 
 	let products: ProductsResponse[];
 
-	console.log(get(saved));
-
 	onMount(async () => {
 		if (!get(saved).length) {
 			return;

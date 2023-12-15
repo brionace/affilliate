@@ -53,16 +53,19 @@
 	// }
 </script>
 
-<ul class="flex flex-wrap gap-4 h-full w-full">
+<ul class="flex flex-wrap gap-4">
 	{#each categories as category}
-		<li class="">
+		<li>
 			<a
 				href={`/${category.slug}`}
 				on:click={() => drawerStore.close()}
-				class="btn variant-filled-primary"
+				class="flex flex-col items-center gap-2"
 			>
 				{#if icons({ name: category.slug })}
-					<span class="block w-6">{@html icons({ name: category.slug })}</span>
+					<span
+						class="flex items-center justify-center block h-24 w-24 rounded-full bg-gray-300 p-1"
+						>{@html icons({ name: category.slug })}</span
+					>
 				{/if}
 				<span>{category.name}</span>
 			</a>

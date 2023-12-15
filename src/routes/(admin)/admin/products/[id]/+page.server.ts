@@ -5,7 +5,7 @@ async function fetchProduct(fetch: typeof window.fetch, id: string) {
 	try {
 		const response = await fetch('/api/admin/products/' + id);
 		const data = await response.json();
-		
+
 		if (!response.ok) {
 			throw error(500, response.statusText);
 		}

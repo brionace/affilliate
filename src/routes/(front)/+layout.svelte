@@ -1,5 +1,5 @@
 <script lang="ts">
-	import '../app.postcss';
+	import '../../app.postcss';
 	import { AppBar } from '@skeletonlabs/skeleton';
 	import { icons } from '$lib/utilities/icons';
 	import { initializeStores } from '@skeletonlabs/skeleton';
@@ -26,14 +26,21 @@
 
 <AppBar gridColumns="grid-cols-3" slotDefault="place-self-center" slotTrail="place-content-end">
 	<svelte:fragment slot="lead">
-		<a href="/" title="Pardycat" class="!font-normal">Pardycat<sup class="text-[8px]">BETA</sup></a>
+		<div class="flex gap-1">
+			<button on:click={() => drawerStore.open(drawerSettings)}>
+				<span class="block w-6">{@html icons({ name: 'menu' })}</span>
+			</button>
+			<a href="/" title="Pardycat" class="!font-normal"
+				>Pardycat<sup class="text-[8px]">BETA</sup></a
+			>
+		</div>
 	</svelte:fragment>
-	<button on:click={() => drawerStore.open(drawerSettings)} class="flex gap-2 items-center">
+	<div class="flex gap-2 items-center">
 		{#if category}
 			<span class="block w-6">{@html icons({ name: category.slug })}</span>
 		{/if}
-		<span>{category ? category.name : 'Browse'}</span>
-	</button>
+		<span>{category ? category.name : 'All products'}</span>
+	</div>
 	<svelte:fragment slot="trail">
 		<a href="/user" class="block w-6">
 			{@html icons({ name: 'heart', fill: !!saved })}
@@ -46,7 +53,7 @@
 <!-- <svelte:body use:style={{ overflow: 'hidden' }} /> -->
 
 <Drawer>
-	<div class="p-4">
+	<!-- <div class="p-4">
 		<form>
 			<input
 				type="text"
@@ -54,8 +61,18 @@
 				class="w-full border border-gray-300 rounded-lg p-2"
 			/>
 		</form>
-	</div>
-	<div class="flex gap-4 p-4 items-center justify-center h-full">
+	</div> -->
+	<!-- {#if category}
+		<div class="p-4">
+			<h1>{category.name}</h1>
+			<p>
+				{category.description}
+			</p>
+		</div>
+		<hr />
+	{/if} -->
+	<div class="p-4">
+		<h2 class="mb-4">Categories</h2>
 		<CategoryList {categories} />
 	</div>
 </Drawer>

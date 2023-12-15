@@ -21,10 +21,10 @@ const { OPENAI_API_KEY } = env;
 // ];
 
 export const POST = async ({ request }) => {
-	const { url } = await request.json();
+	const { value } = await request.json();
 
 	// crawleeFunc(url)
-	const { name, images, price } = await cheerioFunc(url);
+	const { name, images, price } = await cheerioFunc(value);
 
 	// Launch Chromium browser instance
 	// const browser = await chromium.launch();
@@ -78,7 +78,7 @@ export const POST = async ({ request }) => {
 		throw error(400, 'failed to scrape');
 	}
 
-	return json({ name, images, url, price });
+	return json({ name, images, url: value, price });
 };
 
 async function regenerateTitle(title: string) {

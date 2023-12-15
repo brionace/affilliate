@@ -1,9 +1,18 @@
 import { fetchCategories } from '$lib/utilities/fetch';
 import { isValidUrl } from '$lib/utilities';
 
-export async function load({ fetch }) {
+import { redirect } from '@sveltejs/kit';
+
+/**
+ * @param {{ locals: { user: any; categories: any }; }} event
+ */
+export async function load({ fetch, event }) {
+	// if (!event.locals.user) {
+	// 	throw redirect(303, '/');
+	// }
 	return {
-		categories: await fetchCategories(fetch)
+		categories: await fetchCategories(fetch),
+		// user: event.locals.user
 	};
 }
 

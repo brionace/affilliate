@@ -95,3 +95,20 @@ export async function fetchProduct(fetch: typeof window.fetch, id: string) {
 		}
 	}
 }
+
+export async function gfetchUserByEmail(fetch: typeof window.fetch, email: string) {
+	try {
+		const response = await fetch('/api/products/slug/' + email);
+		const data = await response.json();
+
+		if (!response.ok) {
+			return fail(500, { message: response.statusText });
+		}
+
+		return data;
+	} catch (err) {
+		if (err instanceof Error) {
+			throw error(500, err.message);
+		}
+	}
+}

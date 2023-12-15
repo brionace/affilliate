@@ -2,9 +2,9 @@
 	import { onMount } from 'svelte';
 	import CategoryEditor from '$lib/components/CategoryEditor.svelte';
 
-	export let data = {} as import('./$types').PageData;
+	export let data = {} as import('./$types.js').PageData;
 
-	export let form = {} as import('./$types').ActionData;
+	export let form = {} as import('./$types.js').ActionData;
 
 	$: ({ category } = data);
 
@@ -18,6 +18,5 @@
 		}
 	});
 </script>
-
 
 <CategoryEditor {category} />
