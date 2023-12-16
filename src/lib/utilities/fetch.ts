@@ -96,9 +96,15 @@ export async function fetchProduct(fetch: typeof window.fetch, id: string) {
 	}
 }
 
-export async function gfetchUserByEmail(fetch: typeof window.fetch, email: string) {
+export async function fetchUserByEmail(fetch: typeof window.fetch, email: string) {
 	try {
-		const response = await fetch('/api/products/slug/' + email);
+		const response = await fetch('/api/user/', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ email })
+		});
 		const data = await response.json();
 
 		if (!response.ok) {

@@ -3,7 +3,7 @@ import { fetchUserByEmail } from '$lib/utilities/fetch';
 import { dev } from '$app/environment';
 
 export const actions = {
-	default: async ({ request, cookies }) => {
+	default: async ({ request, cookies, fetch }) => {
 		const form = await request.formData();
 		const email = form.get('email');
 		const password = form.get('password');
@@ -11,7 +11,8 @@ export const actions = {
 		if (email === '' || password === '') {
 			throw redirect(307, '/');
 		}
-		const user = await fetchUserByEmail(email);
+
+		const user = await fetchUserByEmail(fetch, email);
 		if (!user || user.password !== password) {
 			return fail(400, { email, incorrect: true });
 		}

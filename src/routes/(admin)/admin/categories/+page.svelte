@@ -7,12 +7,12 @@
 
 <div class="grid gap-8 p-4">
 	<div class="flex gap-4">
-		<Search
+		<!-- <Search
 			placeholder="Search products"
 			on:search={(e) => {
 				product.set({ ...get(product), search: e.detail });
 			}}
-		/>
+		/> -->
 		<a href="/admin/categories/create" class="btn variant-filled">New</a>
 	</div>
 
