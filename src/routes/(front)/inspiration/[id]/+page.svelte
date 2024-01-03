@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Head from '$lib/head.svelte';
-	import ProductsList from '$lib/components/ProductsList.svelte';
+	import ProductsList from '$lib/components/product/List.svelte';
 	import { error } from '@sveltejs/kit';
 	import { Toast, getToastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
