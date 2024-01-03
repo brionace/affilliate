@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Price from '$lib/Price.svelte';
+	import Price from '$lib/components/Price.svelte';
 	import Save from '$lib/components/Save.svelte';
 	import Share from '$lib/components/Share.svelte';
 	import Card from '$lib/components/product/Card.svelte';

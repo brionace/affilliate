@@ -1,6 +1,6 @@
 <script lang="ts">
 	import ProductList from '$lib/components/product/List.svelte';
-	import Price from '$lib/Price.svelte';
+	import Price from '$lib/components/Price.svelte';
 	import Save from '$lib/components/Save.svelte';
 	import Share from '$lib/components/Share.svelte';
 	import Head from '$lib/head.svelte';
