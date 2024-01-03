@@ -1,0 +1,88 @@
+import { ID, Query } from 'appwrite';
+import { databases } from '$lib/utilities/fetch';
+import { getCategory } from '$lib/db/categories';
+
+const PRODUCTS_DATABASE_ID = '6589ce12827946d1cad7'; // Replace with your database ID
+const PRODUCTS_COLLECTION_ID = '6589ceb0749a435516e8'; // Replace with your collection ID
+
+export async function getProduct(id: string) {
+	const response = await databases.getDocument(PRODUCTS_DATABASE_ID, PRODUCTS_COLLECTION_ID, id, [
+		Query.select(['$id', 'name', 'price', 'url', 'images', 'categories']),
+		Query.equal('status', 'published')
+	]);
+	const products = response;
+	return {
+		products
+	};
+}
+
+export async function getProducts() {
+	const response = await databases.listDocuments(PRODUCTS_DATABASE_ID, PRODUCTS_COLLECTION_ID, [
+		Query.orderDesc('$updatedAt'),
+		// Query.limit(10),
+		// Query.offset(0),
+		// Query.select(['$id', 'name', 'price', 'url', 'images', 'categories']),
+		Query.equal('status', 'published')
+	]);
+	const products = response.documents;
+	return {
+		products
+	};
+}
+
+export async function getProductsInCategory(slug: string) {
+	const res = await getCategory(slug);
+	const response = await databases.listDocuments(PRODUCTS_DATABASE_ID, PRODUCTS_COLLECTION_ID, [
+		Query.orderDesc('$updatedAt'),
+		// Query.limit(10),
+		// Query.offset(0),
+		// Query.select(['$id', 'name', 'price', 'url', 'images', 'categories']),
+		Query.equal('status', 'published'),
+		Query.search('categories', res.category[0].slug)
+	]);
+	const products = response.documents;
+	return {
+		products
+	};
+}
+
+export async function addProduct(
+	name: string,
+	price: string,
+	url: URL,
+	images: string[],
+	categories: string[],
+	status: 'published' | 'draft'
+) {
+	try {
+		const response = await databases.createDocument(
+			PRODUCTS_DATABASE_ID,
+			PRODUCTS_COLLECTION_ID,
+			ID.unique(),
+			{
+				name,
+				price,
+				url,
+				images,
+				categories,
+				status
+			}
+		);
+
+		if (!response) {
+			console.log({ response });
+			throw new Error('Failed to add product');
+		}
+
+		return response;
+	} catch (e) {
+		if (e instanceof Error) {
+			console.log(e.message);
+			throw new Error('Failed to add product', e);
+		}
+	}
+}
+
+// export async function deleteCategories(id) {
+// 	await databases.deleteDocument(CATEGORIES_DATABASE_ID, CATEGORIES_COLLECTION_ID, id);
+// }

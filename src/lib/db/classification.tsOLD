@@ -1,0 +1,14 @@
+import { Query } from 'appwrite';
+import { databases } from '$lib/utilities/fetch';
+
+const CLASSIFICATION_DATABASE_ID = '6589ce12827946d1cad7'; // Replace with your database ID
+const CLASSIFICATION_COLLECTION_ID = '6589f8f659fe6e8b23c7'; // Replace with your collection ID
+
+export async function getClassification() {
+	return await databases.listDocuments(
+		CLASSIFICATION_DATABASE_ID,
+		CLASSIFICATION_COLLECTION_ID,
+		// Use a query to show the latest ideas first
+		[Query.orderDesc('$updatedAt')]
+	);
+}

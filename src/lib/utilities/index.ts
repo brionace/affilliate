@@ -5,7 +5,7 @@ export const drawerSettings: DrawerSettings = {
 	// Provide your property overrides:
 	bgDrawer: 'bg-white',
 	bgBackdrop: 'bg-gradient-to-tr from-indigo-500/50 via-purple-500/50 to-pink-500/50',
-	width: 'w-[280px] md:w-[480px]',
+	width: 'w-auto',
 	padding: 'p-4',
 	rounded: 'rounded-xl',
 	position: 'left',
@@ -23,4 +23,19 @@ export function isValidUrl(urlString: string) {
 		'i'
 	); // validate fragment locator
 	return !!urlPattern.test(urlString);
+}
+
+export function clearEmpties(o: { [x: string]: unknown }) {
+	for (const k in o) {
+		if (!o[k] || typeof o[k] !== 'object') {
+			continue; // If null or not an object, skip to the next iteration
+		}
+
+		// The property is an object
+		clearEmpties(o[k] as { [x: string]: unknown }); // <-- Make a recursive call on the nested object
+		if (Object.keys(o[k] as { [x: string]: unknown }).length === 0) {
+			delete o[k]; // The object had no properties, so delete that property
+		}
+	}
+	return o;
 }

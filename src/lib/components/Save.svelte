@@ -13,12 +13,11 @@
 
 	function handleGetSavedProuct() {
 		const savedProducts = $saved;
-		const parsedProducts = savedProducts.length ? JSON.parse(savedProducts) : [];
-		const found = parsedProducts.includes(id);
+		const found = savedProducts.includes(id);
 
 		return {
 			found,
-			parsedProducts
+			savedProducts: $saved
 		};
 	}
 </script>
@@ -26,20 +25,17 @@
 <button
 	class="w-6 visible group-hover:visible"
 	on:click={() => {
-		const { found, parsedProducts } = handleGetSavedProuct();
+		const { found, savedProducts } = handleGetSavedProuct();
 
 		if (found) {
-			const savedProducts = $saved;
-			const parsedProducts = JSON.parse(savedProducts);
-			const newSavedProducts = [...parsedProducts];
-			const index = newSavedProducts.indexOf(id);
+			const index = savedProducts.indexOf(id);
 			if (index > -1) {
 				// only splice array when item is found
-				newSavedProducts.splice(index, 1); // 2nd parameter means remove one item only
+				savedProducts.splice(index, 1); // 2nd parameter means remove one item only
 			}
-			saved.set(JSON.stringify(newSavedProducts));
+			saved.set(savedProducts);
 
-			if (!newSavedProducts.length) {
+			if (!savedProducts.length) {
 				localStorage.removeItem('saved');
 
 				fillSVG = false;
@@ -50,11 +46,11 @@
 			return;
 		}
 
-		const newParsedProducts = [...parsedProducts];
-		newParsedProducts.push(id);
-		console.log(newParsedProducts);
+		const newSavedProducts = savedProducts;
 
-		saved.set(JSON.stringify(newParsedProducts));
+		newSavedProducts.push(id);
+
+		saved.set(newSavedProducts);
 
 		fillSVG = true;
 	}}

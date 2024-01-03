@@ -8,14 +8,8 @@
 
 	const dispatch = createEventDispatcher();
 
-	/**
-	 * @type {{id: number, name: string, slug: string}[]}
-	 */
-	export let categories;
+	export let grouped;
 
-	/**
-	 * @param {string} name
-	 */
 	// async function handleClick(name) {
 	// 	// const res = await fetch('/', {
 	// 	// 	method: 'POST',
@@ -53,24 +47,35 @@
 	// }
 </script>
 
-<ul class="flex flex-wrap gap-4">
-	{#each categories as category}
-		<li>
-			<a
-				href={`/${category.slug}`}
-				on:click={() => drawerStore.close()}
-				class="flex flex-col items-center gap-2"
-			>
-				{#if icons({ name: category.slug })}
-					<span
-						class="flex items-center justify-center block h-24 w-24 rounded-full bg-gray-300 p-1"
-						>{@html icons({ name: category.slug })}</span
-					>
-				{/if}
-				<span>{category.name}</span>
-			</a>
-		</li>
-	{:else}
-		<p>loading...</p>
-	{/each}
-</ul>
+<!-- for (const classification in grouped) {
+  console.log(`\n**${classification.toUpperCase()}**:`);
+  groupedCategories[classification].forEach(category => {
+    console.log(`- ${category.name}`);
+  });
+} -->
+
+{#each Object.entries(grouped) as cat}
+	{#if cat[1].length}
+		<div class="mb-8">
+			<h2 class="mb-4">{cat[0].toUpperCase()}</h2>
+			<ul class="flex flex-col flex-wrap gap-4">
+				{#each cat[1] as category}
+					<li>
+						<a
+							href={`/${category.slug}`}
+							on:click={() => drawerStore.close()}
+							class="flex items-center gap-2"
+						>
+							{#if icons({ name: category.slug })}
+								<span class="flex items-center justify-center block rounded-full bg-gray-300 p-1"
+									>{@html icons({ name: category.slug })}</span
+								>
+							{/if}
+							<span>{category.name}</span>
+						</a>
+					</li>
+				{/each}
+			</ul>
+		</div>
+	{/if}
+{/each}

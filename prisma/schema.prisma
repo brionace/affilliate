@@ -1,8 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
 }
 
 datasource db {
@@ -18,19 +15,21 @@ model Product {
   images    String
   category  String
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
   published Boolean  @default(false)
 }
 
 model Category {
-  id          Int      @id @default(autoincrement())
-  name        String   @unique
-  slug        String   @unique
-  description String
-  inSeason    Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt @default(now())
-  published   Boolean  @default(false)
+  id             Int      @id @default(autoincrement())
+  name           String   @unique
+  slug           String   @unique
+  description    String
+  inSeason       Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
+  published      Boolean  @default(false)
+  classification Classification @relation(fields: [classificationId], references: [id])
+  classificationId Int
 }
 
 model Pages {
@@ -46,5 +45,40 @@ model User {
   email     String   @unique
   password  String   @unique
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  slug      String   @unique
+  image     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  published Boolean  @default(false)
+}
+
+model Inspiration {
+  id        String   @id @default(cuid())
+  event     String
+  age       String
+  gender    String
+  tags      String
+  meta      String
+  mandatory String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  published Boolean  @default(true)
+  public    Boolean  @default(false)
+}
+
+model Classification {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  published Boolean  @default(true)
+  categories  Category[]
 }

@@ -177,14 +177,15 @@ async function extractData(html: string) {
 	// const price: string = `${$('.a-price-symbol').text()}  ${$('.a-price-whole').text()}  ${$(
 	// 	'.a-price-fraction'
 	// ).text()}`;
-	const price: string = $('#apex_desktop [class$="-offscreen"]').text().trim();
+	// const price: string = $('#apex_desktop [class$="-offscreen"]').text().trim();
+	const price = $('#apex_desktop [data-a-size="xl"] [aria-hidden="true"]').text().trim();
 	const images: string[] = [];
 	$('#altImages li').each((_, e) => {
 		const imgSrc = $(e)?.find('img')?.attr('src')?.replace(/._.*_/, '');
 		if (imgSrc) images.push(imgSrc);
 	});
 
-	return { name, price, images };
+	return { name, price: getFirstPrice(price), images };
 }
 
 async function cheerioFunc(url: string) {
@@ -195,5 +196,15 @@ async function cheerioFunc(url: string) {
 		return data;
 	} catch (error: unknown) {
 		if (error instanceof Error) console.error(`Failed to crawl "${url}": ${error?.message}`);
+	}
+}
+
+function getFirstPrice(text) {
+	const regex = /£(\d+\.\d{2})/;
+	const match = regex.exec(text);
+	if (match) {
+		return match[1];
+	} else {
+		return null;
 	}
 }

@@ -8,7 +8,9 @@
 	import CategoryList from '$lib/components/CategoryList.svelte';
 	import { drawerSettings } from '$lib/utilities';
 	import { saved } from '$lib/utilities/store';
-	// import { Body, classList, style } from 'svelte-body@latest';
+	import { Modal, getModalStore } from '@skeletonlabs/skeleton';
+	import type { ModalSettings, ModalComponent } from '@skeletonlabs/skeleton';
+	import CreateInspiration from '$lib/components/CreateInspiration.svelte';
 
 	initializeStores();
 
@@ -21,7 +23,22 @@
 
 	export let data;
 
-	$: ({ categories, category } = data);
+	$: ({ categories, groupedCategories } = data);
+
+
+	const modalStore = getModalStore();
+
+	function handleCreateInspiration() {
+		const ModalComponent: ModalComponent = {
+			ref: CreateInspiration,
+			props: { data }
+		};
+		const modal: ModalSettings = {
+			type: 'component',
+			component: ModalComponent
+		};
+		modalStore.trigger(modal);
+	}
 </script>
 
 <AppBar gridColumns="grid-cols-3" slotDefault="place-self-center" slotTrail="place-content-end">
@@ -30,23 +47,18 @@
 			<button on:click={() => drawerStore.open(drawerSettings)}>
 				<span class="block w-6">{@html icons({ name: 'menu' })}</span>
 			</button>
-			<a href="/" title="Pardycat" class="!font-normal"
-				>Pardycat<sup class="text-[8px]">BETA</sup></a
-			>
 		</div>
 	</svelte:fragment>
-	<div class="flex gap-2 items-center">
-		{#if category}
-			<span class="block w-6">{@html icons({ name: category.slug })}</span>
-		{/if}
-		<span>{category ? category.name : 'All products'}</span>
-	</div>
+	<a href="/" title="Pardycat" class="!font-normal">Pardycat</a>
 	<svelte:fragment slot="trail">
-		<a href="/user" class="block w-6">
-			{@html icons({ name: 'heart', fill: !!saved })}
-		</a>
+		<button on:click={() => handleCreateInspiration()} class="btn flex gap-1">
+			<!-- <span>{@html icons({ name: 'create', fill: !!saved })}</span> -->
+			<span>Create</span></button
+		>
 	</svelte:fragment>
 </AppBar>
+
+<Modal />
 
 <slot />
 
@@ -72,8 +84,7 @@
 		<hr />
 	{/if} -->
 	<div class="p-4">
-		<h2 class="mb-4">Categories</h2>
-		<CategoryList {categories} />
+		<CategoryList {categories} grouped={groupedCategories} />
 	</div>
 </Drawer>
 

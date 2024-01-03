@@ -6,25 +6,19 @@
 
 	export let data;
 
-	const { categories, product } = data;
+	const { product, groupedCategories } = data;
 
-	const id = product?.id ? product.id : '';
+	const id = product?.$id ? product.$id : '';
 	const url = product?.url ? product.url : '';
 	let images = product?.images ? product.images : [];
 	let name = product?.name ? product.name : '';
 	let price = product?.price ? product.price : '';
-	let published = product?.published ? product.published : false;
-	let tags = categories;
-	let selectedCategory = '';
-	let selectedTags = [];
+	let status = product?.status === 'published' ? 'on' : 'off';
+	let categories: number[] = product?.categories ? product.categories : [];
 
 	const newImage = writable('');
 </script>
 
-<!-- <form
-	on:submit|preventDefault={saveToDB}
-	on:change={updateProduct}
-> -->
 <form method="POST" action={`?/${id ? 'update' : 'create'}`}>
 	<div class="grid grid-cols-1 grid-rows-[auto,1fr] min-h-screen overflow-y-auto items-start">
 		<div class="md:col-span-2 p-4 bg-gray-50">
@@ -38,16 +32,6 @@
 					name = event.target.value.trim();
 				}}
 			/>
-			<!-- <h2
-			class="h1 w-full h-full"
-			contenteditable="true"
-			on:input={(event) => {
-				name = event.target.innerText.trim();
-				updateProduct();
-			}}
-		>
-			{name}
-		</h2> -->
 		</div>
 		<div class="flex flex-col gap-4 px-4">
 			<div class="flex flex-wrap gap-3 items-start">
@@ -94,61 +78,52 @@
 				<label for="url">URL</label>
 				<input id="url" name="url" value={url} required />
 			</div>
-			<div>
-				<label for="category">Category</label>
-				<select
-					id="category"
-					name="category"
-					required
-					bind:value={selectedCategory}
-					on:change={(event) => {
-						tags = categories.filter((category) => category.name !== event.target.value);
-						selectedCategory = event.target.value;
-					}}
-				>
-					{#if categories}
-						{#each categories as category}
-							<option value={category?.name}>{category.name} </option>
-						{/each}
-					{/if}
-				</select>
-			</div>
-			<div>
-				<label for="tags">Tags</label>
-				<div class="flex gap-3">
-					<select
-						id="tags"
-						multiple
-						on:change={(event) => {
-							selectedTags = Array.from(new Set([...selectedTags, event.target.value]));
-						}}
-						disabled={!selectedCategory.length}
-					>
-						{#if tags}
-							{#each tags as tag}
-								<option value={tag.name} selected={selectedTags.includes(tag.name)}
-									>{tag.name}</option
-								>
-							{/each}
-						{/if}
-					</select>
-					{#if selectedTags?.length}
-						<div class="max-w-56 overflow-x-auto">
-							Selected tags:
-							<ul>
-								{#each selectedTags as tag}
-									<li>
-										<button on:click={() => (selectedTags = selectedTags.filter((e) => e !== tag))}
-											>{tag}</button
-										>
-										<input type="hidden" name="tags" bind:value={tag} />
-									</li>
-								{/each}
-							</ul>
+			{#each Object.entries(groupedCategories) as cat}
+				<div>
+					<h2>{cat[0].toUpperCase()}</h2>
+					{#each cat[1] as category}
+						<!-- {#if cat[0] === 'event'}
+							<div class="flex gap-3">
+								<label for={category.slug}>{category.name}</label>
+								<input
+									id={category.slug}
+									type="radio"
+									name={cat[0]}
+									value={category.id}
+									bind:group={categories}
+									on:change={() => {
+										console.log(categories);
+									}}
+								/>
+							</div>
+						{:else}
+							<div class="flex gap-3">
+								<label for={category.slug}>{category.name}</label>
+								<input
+									id={category.slug}
+									type="checkbox"
+									name={category.slug}
+									value={category.id}
+									bind:group={categories}
+									on:change={() => {
+										console.log(categories);
+									}}
+								/>
+							</div>
+						{/if} -->
+						<div class="flex gap-3 flex-row-reverse items-center justify-end">
+							<label for={category.slug}>{category.name}</label>
+							<input
+								id={category.slug}
+								type="checkbox"
+								name="category"
+								value={category.slug}
+								bind:group={categories}
+							/>
 						</div>
-					{/if}
+					{/each}
 				</div>
-			</div>
+			{/each}
 			<div class="flex gap-4 items-center">
 				{#if id}
 					<form action="?/delete" method="POST">
@@ -161,11 +136,11 @@
 				</button>
 				<div class="flex gap-3 justify-center items-center">
 					<input
-						id="published"
+						id="status"
 						type="checkbox"
-						name="published"
-						bind:checked={published}
-						on:change={(event) => (published = event.target.checked)}
+						name="status"
+						bind:checked={status}
+						on:change={(event) => (status = event.target.checked)}
 					/>
 					<label for="published">Published</label>
 				</div>

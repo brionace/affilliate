@@ -1,13 +1,16 @@
 <script>
 	import { icons } from '$lib/utilities/icons';
+	import { Toast, getToastStore } from '@skeletonlabs/skeleton';
 
-	/**
-	 * @type {string}
-	 */
-	export let url;
+	const toastStore = getToastStore();
 
 	function handleShare() {
-		console.log(url);
+		const t = {
+			message: 'Coming soon'
+			// autohide: false
+		};
+
+		toastStore.trigger(t);
 	}
 </script>
 

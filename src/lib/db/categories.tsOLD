@@ -1,0 +1,28 @@
+import { Query } from 'appwrite';
+import { databases } from '$lib/utilities/fetch';
+
+const CATEGORIES_DATABASE_ID = '6589ce12827946d1cad7'; // Replace with your database ID
+const CATEGORIES_COLLECTION_ID = '6589d4bd233af9b6def4'; // Replace with your collection ID
+
+export async function getCategories() {
+	const response = await databases.listDocuments(CATEGORIES_DATABASE_ID, CATEGORIES_COLLECTION_ID, [
+		Query.orderDesc('$updatedAt')
+	]);
+	const categories = response.documents;
+	const age = categories.filter((category) => category.classification.$id === 'age');
+	return {
+		categories,
+		age
+	};
+}
+
+export async function getCategory(slug: string) {
+	const response = await databases.listDocuments(CATEGORIES_DATABASE_ID, CATEGORIES_COLLECTION_ID, [
+		Query.equal('slug', slug)
+		// Query.select(['name', 'slug', 'description'])
+	]);
+	const category = response.documents;
+	return {
+		category
+	};
+}

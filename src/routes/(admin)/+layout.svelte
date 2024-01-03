@@ -1,4 +1,5 @@
 <script>
+	import '../../app.postcss';
 	import { AppBar } from '@skeletonlabs/skeleton';
 	import { icons } from '$lib/utilities/icons';
 </script>
@@ -11,8 +12,8 @@
 		<span class="block w-6">{@html icons({ name: 'logo' })}</span>
 	</a>
 	<svelte:fragment slot="trail">
-		<a href="/admin/products">Products</a>
-		<a href="/admin/categories">Categories</a>
+		<a href="/doli/products/new">New</a>
+		<a href="/doli/products">Products</a>
 	</svelte:fragment>
 </AppBar>
 
