@@ -45,7 +45,7 @@ export const GET = async () => {
 			);
 
 			if (!res) {
-				throw error(500, 'failed to get products');
+				throw error(500, 'failed to get categories in inspirations');
 			}
 
 			return { inspiration, products: res.documents, total: res.total };

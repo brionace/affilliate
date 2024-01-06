@@ -11,7 +11,7 @@
 
 	export let data;
 
-	$: ({ products, inspiration } = data);
+	$: ({ products, inspirations } = data);
 
 	async function fetchMoreProducts(products: ProductsResponse, url: string) {
 		const { list, meta } = products;
@@ -62,7 +62,7 @@
 <Head title="Pardycat" description="Find your next party outfit or fancy dress like a boss" />
 
 <main class="my-11">
-	<InspirationList data={inspiration} />
+	<InspirationList data={inspirations} />
 	<!-- <ProductList
 		{products}
 		on:loadMore={(e) =>

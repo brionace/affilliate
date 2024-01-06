@@ -60,7 +60,7 @@
 					{#if l.total - l.products.length}
 						<a
 							class="flex items-center justify-center w-20 h-20 text-xs font-medium text-white bg-gray-700 border-2 border-white rounded-full hover:bg-gray-600 dark:border-gray-800"
-							href={`/inspirations/${l.inspiration.$id}`}>+{l.total - l.products.length}</a
+							href={`/inspiration/${l.inspiration.$id}`}>+{l.total - l.products.length}</a
 						>
 					{/if}
 				</div>

@@ -2,6 +2,7 @@ import { error, fail } from '@sveltejs/kit';
 import { Client as C, Account } from 'appwrite';
 import { Client, Databases } from 'node-appwrite';
 import { APPWRITE_ENDPOINT, APPWRITE_PROJECT_ID, APPWRITE_API_KEY } from '$env/static/private';
+import type { StringDecoder } from 'string_decoder';
 
 const client = new Client();
 
@@ -169,9 +170,30 @@ export async function fetchClassificationAdmin(fetch: typeof window.fetch) {
 	}
 }
 
-export async function fetchInspiration(fetch: typeof window.fetch) {
+export async function fetchInspirations(fetch: typeof window.fetch) {
 	try {
 		const response = await fetch(`/api/appwrite/inspiration`);
+		const data = await response.json();
+
+		if (response.ok) {
+			return data;
+		}
+
+		return fail(500, { message: response.statusText });
+	} catch (err) {
+		if (err instanceof Error) {
+			throw error(500, err.message);
+		}
+
+		throw error(500, 'unknown error');
+	} finally {
+		// handle loading state
+	}
+}
+
+export async function fetchInspiration(fetch: typeof window.fetch, id: string) {
+	try {
+		const response = await fetch(`/api/appwrite/inspiration/${id}`);
 		const data = await response.json();
 
 		if (response.ok) {

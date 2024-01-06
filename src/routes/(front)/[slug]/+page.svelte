@@ -1,8 +1,5 @@
 <script lang="ts">
 	import ProductList from '$lib/components/product/List.svelte';
-	import Price from '$lib/components/Price.svelte';
-	import Save from '$lib/components/Save.svelte';
-	import Share from '$lib/components/Share.svelte';
 	import Head from '$lib/head.svelte';
 	import { error, fail } from '@sveltejs/kit';
 	import type { ProductsResponse } from '$lib/utilities/types.js';
@@ -15,8 +12,10 @@
 
 	export let data;
 
-	$: ({ products, category } = data);
-	$: ({ name, description, slug } = category);
+	$: ({
+		products,
+		category: { name, description, slug }
+	} = data);
 
 	let showDescription = false;
 

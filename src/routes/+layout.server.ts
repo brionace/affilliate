@@ -1,4 +1,4 @@
-import { fetchCategories, fetchProducts, fetchClassification, fetchInspiration } from '$lib/api';
+import { fetchCategories, fetchProducts, fetchClassification, fetchInspirations } from '$lib/api';
 import { clearEmpties } from '$lib/utilities';
 
 export async function load({ fetch }) {
@@ -27,6 +27,6 @@ export async function load({ fetch }) {
 		groupedCategories: await classifiedCategories(),
 		categories,
 		age,
-		inspiration: await fetchInspiration(fetch)
+		inspirations: await fetchInspirations(fetch)
 	};
 }

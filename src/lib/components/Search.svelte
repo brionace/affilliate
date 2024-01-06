@@ -12,7 +12,7 @@
 
 		if (isValidUrl(value)) {
 			try {
-				const response = await fetch('/api/scrape', {
+				const response = await fetch('/api/scrape/2.0', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json'
