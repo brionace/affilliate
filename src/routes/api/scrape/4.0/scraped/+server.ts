@@ -5,10 +5,14 @@ import * as cheerio from 'cheerio';
 // import { Query, type Models } from 'appwrite';
 // import { databases, generateCategories } from '$lib/api';
 // import { ID } from 'appwrite';
-import interest from '$lib/db/interest.json';
-import whoFor from '$lib/db/who-for.json';
-import occasion from '$lib/db/occasion.json';
 import { supabase } from '$lib/supabaseClient';
+
+import interest from '$lib/db/interest.json';
+import gender from '$lib/db/gender.json';
+import occasion from '$lib/db/occasion.json';
+import pet from '$lib/db/pet.json';
+import age from '$lib/db/ageRange.json';
+import sexuality from '$lib/db/sexuality.json';
 
 const { OPENAI_API_KEY } = env;
 
@@ -75,10 +79,50 @@ export const POST = async ({ request }) => {
 };
 
 async function generateTags(title: string, description: string) {
-	const whoForId = whoFor.map((o) => o.category);
+	const ageId = age.map((o) => o.display);
 	const interestId = interest.map((o) => o.plural);
-	const occasionId = occasion.map((o) => o.plural);
-	// const categories = [...whoForId, ...interestPlural, ...occasionPlural];
+	const occasionId = occasion.map((o) => o.singular);
+
+	const sexualityId = sexuality.map((o) => o.singular);
+	const petId = pet.map((o) => o.singular);
+	const genderId = gender.map((o) => o.singular);
+
+	/*
+	Given a product title and description, identify the most likely categories that apply from the following lists:\n\n
+
+					Age Range: ${ageId}\n
+					Pet: ${petId}\n
+					Gender: ${genderId}\n
+					Interest: ${interestId}\n
+					Occasion: ${occasionId}\n
+					Sexuality: ${sexualityId}\n
+
+					Input:\n\n
+
+					Product Title: ${title}\n
+					Product Description: ${description}\n\n
+
+					Output:\n\n
+
+					A list of categories (strings) that apply to the product. Include only the most relevant category from each list 
+					(e.g., age range, pet type, etc.). Do not include any reasoning or descriptions.
+	*/
+	/*
+	You are a product categorization model. Given a product title and description, identify the most likely categories that apply from the following lists:\n\n
+
+					Age Range: ${ageId}\n
+					Pet: ${petId}\n
+					Gender: ${genderId}\n
+					Interest: ${interestId}\n
+					Occasion: ${occasionId}\n
+					Sexuality: ${sexualityId}\n\n
+
+					Your output should look like this: ['category1', 'category2', 'category3']\n
+					<</SYS>>
+
+					Product Title: ${title}\n
+					Product Description: ${description}\n\n
+	*/
 
 	try {
 		const request = await fetch(
@@ -90,25 +134,29 @@ async function generateTags(title: string, description: string) {
 					Authorization: `Bearer ${OPENAI_API_KEY}`
 				},
 				body: JSON.stringify({
-					input: `{{#system~}}You are a products classification expert.\n 
-					Select the most suitable category or categories from the provided list 
-					for the given product title and description:\n
+					input: `[INST] <<SYS>>
+					You are a product categorization model. Given a product title and description, 
+					select and return the most appropriate categories that apply from each list provided:\n\n
 
-					Categories List: ${[...whoForId, ...interestId, ...occasionId]}\n
-					
-					In addition:\n
-					If the product indicates it's primarily for pets, choose "Pet"\n
-					If the product appears suitable for a specific age or ages, choose the most likely age or ages.\n
-					Do not include an explanation behind your choices.\n
-					Do not include any test before the answer.\n
-					Do not make up any categories. You MUST only choose from the given list.\n
+					Age: ${ageId}\n
+					Pet: ${petId}\n
+					Gender: ${genderId}\n
+					Interest: ${interestId}\n
+					Occasion: ${occasionId}\n
+					Sexuality: ${sexualityId}\n
 
-					Your answer should be in the following format: ["example1", "example2", "example3"]\n{{~/system}}
-					[INST]
-					Product Title: ${title}.\n 
-					
-					Product Description: ${description}.\n\n
-					[/INST]`,
+					If you are unable to determine any categories, return an empty list.\n
+					If the product indicates it's primarily for pets, choose from the following categories: Pet, Occassion, Gender\n
+					If the products is not primarily for pets, do not choose from Pet category.\n
+					Do not generate new categories. Only return the ones provided.\n
+
+					You must only return the answer in the following format: ['category1', 'category2', 'category3']\n
+					<<SYS>>
+
+					Product Title: ${title}\n
+					Product Description: ${description}\n\n
+					[/INST]
+					`,
 					max_new_tokens: 128,
 					temperature: 0
 				})

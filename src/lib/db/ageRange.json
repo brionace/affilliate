@@ -3,35 +3,35 @@
 		"id": "0-2",
 		"singular": "Baby",
 		"plural": "Babies",
-		"category": "Age (0-2)",
+		"display": "Age (0-2)",
 		"description": "A baby is a very young child, typically one that is still breastfeeding or has just started to walk."
 	},
 	{
 		"id": "3-5",
 		"singular": "Toddler",
 		"plural": "Toddlers",
-		"category": "Age (3-5)",
+		"display": "Age (3-5)",
 		"description": "A toddler is a young child who has started to walk but is not yet school-age."
 	},
 	{
 		"id": "6-8",
 		"singular": "Young Child",
 		"plural": "Young Children",
-		"category": "Age (6-8)",
+		"display": "Age (6-8)",
 		"description": "A child is a young human being below the age of puberty or below the legal age of majority."
 	},
 	{
 		"id": "9-11",
 		"singular": "Older Child",
 		"plural": "Older Chrildren",
-		"category": "Age (9-11)",
+		"display": "Age (9-11)",
 		"description": "A teenager is a person aged from 13 to 19 years."
 	},
 	{
 		"id": "12-14",
 		"singular": "Young Teen",
 		"plural": "Young Teens",
-		"category": "Age (12-14)",
+		"display": "Age (12-14)",
 		"description": "A teenager is a person aged from 13 to 19 years."
 	},
 	{
@@ -39,84 +39,49 @@
 		"singular": "Older Teen",
 		"plural": "Older Teens",
 		"age": "20-30",
-		"category": "Age (15-17)",
+		"display": "Age (15-17)",
 		"description": "A person who is fully grown or developed."
 	},
 	{
 		"id": "18-24",
 		"singular": "Youth",
 		"plural": "Youth",
-		"category": "Age (18-24)",
+		"display": "Age (18-24)",
 		"description": "A person who is fully grown or developed."
 	},
 	{
 		"id": "25-34",
 		"singular": "Young Adult",
 		"plural": "Young Adults",
-		"category": "Age (25-34)",
+		"display": "Age (25-34)",
 		"description": "A person who is fully grown or developed."
 	},
 	{
 		"id": "35-44",
 		"singular": "Adult",
 		"plural": "Adults",
-		"category": "Age (35-44)",
+		"display": "Age (35-44)",
 		"description": "A person who is fully grown or developed."
 	},
 	{
 		"id": "45-54",
 		"singular": "Older Adult",
 		"plural": "Older Adults",
-		"category": "Age (45-54)",
+		"display": "Age (45-54)",
 		"description": "A person who is fully grown or developed."
 	},
 	{
 		"id": "55-64",
 		"singular": "Middle Aged",
 		"plural": "Middle Aged",
-		"category": "Age (55-64)",
+		"display": "Age (55-64)",
 		"description": "A person who is fully grown or developed."
 	},
 	{
 		"id": "65+",
 		"singular": "Senior",
 		"plural": "Seniors",
-		"category": "Age (65+)",
+		"display": "Age (65+)",
 		"description": "A person who is fully grown or developed."
-	},
-	{
-		"id": "pet",
-		"singular": "Pet",
-		"plural": "Pets",
-		"category": "Pet",
-		"description": "A pet is an animal kept primarily for a person's company or entertainment rather than as a working animal, livestock, or a laboratory animal."
-	},
-	{
-		"id": "female",
-		"singular": "Sex",
-		"plural": "Sexes",
-		"category": "Female",
-		"description": "A person who is female."
-	},
-	{
-		"id": "male",
-		"singular": "Sex",
-		"plural": "Sexes",
-		"category": "Male",
-		"description": "A person who is female."
-	},
-	{
-		"id": "gay",
-		"singular": "Sexuality",
-		"plural": "Sexualities",
-		"category": "Gay",
-		"description": ""
-	},
-	{
-		"id": "lesbian",
-		"singular": "Sexuality",
-		"plural": "Sexualities",
-		"category": "Lesbian",
-		"description": ""
 	}
 ]

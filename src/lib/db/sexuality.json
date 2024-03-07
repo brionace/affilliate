@@ -1,0 +1,20 @@
+[
+	{
+		"id": "bisexual",
+		"singular": "Bisexual",
+		"plural": "Bisexuals",
+		"description": ""
+	},
+	{
+		"id": "gay",
+		"singular": "Gay",
+		"plural": "Gays",
+		"description": ""
+	},
+	{
+		"id": "lesbian",
+		"singular": "Lesbian",
+		"plural": "Lesbians",
+		"description": ""
+	}
+]

@@ -1,0 +1,32 @@
+[
+	{
+		"id": "dog",
+		"singular": "Dog",
+		"plural": "Dogs",
+		"description": "A pet is an animal kept primarily for a person's company or entertainment rather than as a working animal, livestock, or a laboratory animal."
+	},
+	{
+		"id": "puppy",
+		"singular": "Puppy",
+		"plural": "Puppies",
+		"description": ""
+	},
+	{
+		"id": "cat",
+		"singular": "Cat",
+		"plural": "Cats",
+		"description": ""
+	},
+	{
+		"id": "kitten",
+		"singular": "Kitten",
+		"plural": "Kittens",
+		"description": ""
+	},
+	{
+		"id": "pig",
+		"singular": "Pigs",
+		"plural": "Pig",
+		"description": ""
+	}
+]

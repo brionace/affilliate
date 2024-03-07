@@ -1,0 +1,14 @@
+[
+	{
+		"id": "female",
+		"singular": "Female",
+		"plural": "Females",
+		"description": "A person who is female."
+	},
+	{
+		"id": "male",
+		"singular": "Male",
+		"plural": "Males",
+		"description": "A person who is female."
+	}
+]
