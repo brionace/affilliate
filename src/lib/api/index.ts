@@ -1,7 +1,12 @@
 import { error, fail } from '@sveltejs/kit';
-import { Client as C, Account } from 'appwrite';
+import { Client as C, Account, Query, type Models } from 'appwrite';
 import { Client, Databases } from 'node-appwrite';
-import { APPWRITE_ENDPOINT, APPWRITE_PROJECT_ID, APPWRITE_API_KEY } from '$env/static/private';
+import {
+	APPWRITE_ENDPOINT,
+	APPWRITE_PROJECT_ID,
+	APPWRITE_API_KEY,
+	OPENAI_API_KEY
+} from '$env/static/private';
 import type { StringDecoder } from 'string_decoder';
 
 const client = new Client();
@@ -170,9 +175,13 @@ export async function fetchClassificationAdmin(fetch: typeof window.fetch) {
 	}
 }
 
-export async function fetchInspirations(fetch: typeof window.fetch) {
+export async function fetchInspirations(fetch: typeof window.fetch, deviceType?: string) {
 	try {
-		const response = await fetch(`/api/appwrite/inspiration`);
+		const response = await fetch(`/api/appwrite/inspiration`, {
+			headers: {
+				'User-Agent': deviceType ?? ''
+			}
+		});
 		const data = await response.json();
 
 		if (response.ok) {
@@ -209,5 +218,53 @@ export async function fetchInspiration(fetch: typeof window.fetch, id: string) {
 		throw error(500, 'unknown error');
 	} finally {
 		// handle loading state
+	}
+}
+
+export async function generateCategories(product: { title: string; description: string }) {
+	const CATEGORIES_DATABASE_ID = '6589ce12827946d1cad7'; // Replace with your database ID
+	const CATEGORIES_COLLECTION_ID = '6589d4bd233af9b6def4'; // Replace with your collection ID
+	const response = await databases.listDocuments(CATEGORIES_DATABASE_ID, CATEGORIES_COLLECTION_ID, [
+		Query.limit(1000)
+	]);
+
+	const categories = response.documents.map((document: Models.Document) => document.name);
+
+	try {
+		const request = await fetch(
+			'https://api.deepinfra.com/v1/inference/meta-llama/Llama-2-7b-chat-hf',
+			{
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${OPENAI_API_KEY}`
+				},
+				body: JSON.stringify({
+					input: `{{#system~}}You are a product a product expert{{~/system}}
+					[INST]Analyse the given Product Title and Product Description and return the most appropriate categories that match it best from the given Category List. Respond in the format provided.
+
+					Product Title:\n
+					${product.title}\n\n
+
+					Product Description:\n
+					${product.description}.\n\n
+
+					Category List:\n
+					${categories.join(', ')}\n\n
+
+					Response Format:\n
+					['Cosplay', 'Clothing', 'Summer', 'Comic Con']\n\n
+					[/INST]
+					`,
+					max_new_tokens: 128,
+					temperature: 0
+				})
+			}
+		);
+		const requestJSON = await request.json();
+		return requestJSON.results[0].generated_text.trim();
+	} catch (error) {
+		console.error(error);
+		return 'Failed to generate categories';
 	}
 }

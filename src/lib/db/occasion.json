@@ -1,0 +1,47 @@
+[
+	{
+		"id": "anniversaries",
+		"singular": "Anniversary",
+		"plural": "Anniversaries"
+	},
+	{
+		"id": "birthdays",
+		"singular": "Birthday",
+		"plural": "Birthdays"
+	},
+	{
+		"id": "christmas",
+		"singular": "Christmas",
+		"plural": "Christmases"
+	},
+	{
+		"id": "easter",
+		"singular": "Easter",
+		"plural": "Easters"
+	},
+	{
+		"id": "halloween",
+		"singular": "Halloween",
+		"plural": "Halloweens"
+	},
+	{
+		"id": "mothers-day",
+		"singular": "Mother's Day",
+		"plural": "Mother's Days"
+	},
+	{
+		"id": "new-year",
+		"singular": "New Year",
+		"plural": "New Years"
+	},
+	{
+		"id": "thanksgiving",
+		"singular": "Thanksgiving",
+		"plural": "Thanksgivings"
+	},
+	{
+		"id": "valentines-day",
+		"singular": "Valentine's Day",
+		"plural": "Valentine's Days"
+	}
+]

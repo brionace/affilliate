@@ -84,7 +84,7 @@
 		// Get the key for the current step
 		let key = Object.keys(formData)[currentStep - 1];
 
-		if (key === 'meta') {
+		if (key === 'meta' || optionGroups.includes(key)) {
 			lockedState = false;
 		} else if (formData[key] || skipped.includes(key)) {
 			lockedState = false;
@@ -159,12 +159,12 @@
 	<div class="p-6 overflow-auto">
 		<form on:submit|preventDefault={handleSubmit}>
 			{#each Object.entries(grouped) as cat, i}
-				{#if currentStep == i + 1}
+				{#if currentStep === i + 1}
 					<div class="flex justify-between items-center gap-3 mb-4">
 						<h2>{handleTitle(cat[0])}</h2>
 						<div class="flex gap-3">
 							<div>
-								<button class="btn" on:click={() => handleProgress(-1)} disabled={currentStep == 1}
+								<button class="btn" on:click={() => handleProgress(-1)} disabled={currentStep === 1}
 									>Prev</button
 								>
 								<button class="btn" on:click={() => handleProgress(+1)} disabled={lockedState}

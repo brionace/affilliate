@@ -7,7 +7,7 @@ const PRODUCTS_COLLECTION_ID = '6589ceb0749a435516e8'; // Replace with your coll
 
 export const GET = async ({ params: { id } }) => {
 	const data = await databases.getDocument(PRODUCTS_DATABASE_ID, PRODUCTS_COLLECTION_ID, id, [
-		Query.select(['$id', 'name', 'price', 'url', 'images', 'categories'])
+		Query.select(['$id', 'title', 'price', 'url', 'images', 'categories'])
 	]);
 
 	if (!data) {
@@ -20,10 +20,10 @@ export const GET = async ({ params: { id } }) => {
 };
 
 export const PUT = async ({ request }) => {
-	const { id, name, price, url, images, categories, status } = await request.json();
+	const { id, title, price, url, images, categories, status } = await request.json();
 
 	const data = await databases.updateDocument(PRODUCTS_DATABASE_ID, PRODUCTS_COLLECTION_ID, id, {
-		name,
+		title,
 		price,
 		url,
 		images,

@@ -18,7 +18,7 @@
 	const { product } = data;
 </script>
 
-<Head title={product.name} />
+<Head title={product.title} />
 
 <main>
 	{#if product}
@@ -28,7 +28,7 @@
 			>
 				{#each product.images as image, i}
 					<div class="flex justify-center snap-center shrink-0">
-						<img src={image} alt={i === 0 ? product.name : ''} />
+						<img src={image} alt={i === 0 ? product.title : ''} />
 					</div>
 				{/each}
 			</div>
@@ -41,7 +41,7 @@
 					</div>
 				</div>
 				<p>
-					{product.name}
+					{product.title}
 				</p>
 			</div>
 		</div>

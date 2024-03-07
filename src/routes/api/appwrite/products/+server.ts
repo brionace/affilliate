@@ -11,7 +11,7 @@ export const GET = async ({ url }) => {
 		Query.orderDesc('$updatedAt'),
 		// Query.limit(10),
 		// Query.offset(0),
-		// Query.select(['$id', 'name', 'price', 'url', 'images', 'categories']),
+		// Query.select(['$id', 'title', 'price', 'url', 'images', 'categories']),
 		Query.equal('status', 'published')
 	];
 
@@ -43,7 +43,7 @@ export const GET = async ({ url }) => {
 // 		Query.orderDesc('$updatedAt'),
 // 		// Query.limit(10),
 // 		// Query.offset(0),
-// 		// Query.select(['$id', 'name', 'price', 'url', 'images', 'categories']),
+// 		// Query.select(['$id', 'title', 'price', 'url', 'images', 'categories']),
 // 		Query.equal('status', 'published'),
 // 		Query.equal('categories', categories)
 // 	]);
@@ -83,7 +83,7 @@ export const GET = async ({ url }) => {
 // 		select: {
 // 			id: true,
 // 			url: true,
-// 			name: true,
+// 			title: true,
 // 			images: true,
 // 			price: true
 // 		}
@@ -100,7 +100,7 @@ export const GET = async ({ url }) => {
 // 		list: products.map((product) => {
 // 			return {
 // 				id: product.id,
-// 				name: product.name,
+// 				title: product.title,
 // 				images: JSON.parse(product.images),
 // 				url: product.url,
 // 				price: product.price,

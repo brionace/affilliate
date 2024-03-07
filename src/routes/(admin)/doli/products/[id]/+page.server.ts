@@ -57,7 +57,7 @@ export const actions: import('./$types').Actions = {
 		const data = await request.formData();
 
 		const id = data.get('id') as string;
-		const name = data.get('name') as string;
+		const title = data.get('title') as string;
 		const price = data.get('price') as unknown as string;
 		const url = data.get('url') as unknown as URL;
 		const status = data.get('status') === 'on' ? 'published' : 'draft';
@@ -69,7 +69,7 @@ export const actions: import('./$types').Actions = {
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify({ id, name, price, url, images, categories, status })
+			body: JSON.stringify({ id, title, price, url, images, categories, status })
 		});
 
 		if (!response.ok) {

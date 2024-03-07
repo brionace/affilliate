@@ -1,0 +1,22 @@
+[
+    {
+        "id":"music",
+        "singular":"Music",
+        "plural":"Music"
+    },
+    {
+        "id":"movies",
+        "singular":"Movie",
+        "plural":"Movies"
+    },
+    {
+        "id":"books",
+        "singular":"Book",
+        "plural":"Books"
+    },
+    {
+        "id":"games",
+        "singular":"Game",
+        "plural":"Games"
+    }
+]

@@ -1,6 +1,6 @@
 import type { PlaywrightTestConfig } from '@playwright/test';
 
-const { VITE_IPROYAL_SERVER, VITE_IPROYAL_USERNAME, VITE_IPROYAL_PASSWORD } = import.meta.env;
+const { VITE_IPROYAL_SERVER, VITE_IPROYAL_USERNAME, VITE_IPROYAL_PASSWORD } = process.env;
 
 const config: PlaywrightTestConfig = {
 	webServer: {

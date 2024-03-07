@@ -1,59 +1,79 @@
 <script lang="ts">
-	import { product } from '$lib/utilities/store';
+	import { products } from '$lib/utilities/store';
 	import { error } from '@sveltejs/kit';
 	import * as cheerio from 'cheerio';
+	import { writable } from 'svelte/store';
 
 	const OPENAI_API_KEY = import.meta.env.OPENAI_API_KEY;
+
+	// const products = writable(JSON.parse(localStorage.getItem('products')));
+	// products.subscribe((value) => (localStorage.products = JSON.stringify(value)));
 
 	// @ts-ignore
 	async function handleSearch(event) {
 		const target = event.target.query;
+		const parsedProducts: string[] = JSON.parse(localStorage.getItem('products') as any);
+
+		if (parsedProducts.length > 0) {
+			target.value = '';
+			await parseAndSave(parsedProducts);
+			return;
+		}
+
 		const value = target.value;
 
-		if (isValidUrl(value)) {
-			try {
-				const response = await fetch('/api/scrape/2.0', {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					body: JSON.stringify({ value })
-				});
-				const data = await response.json();
+		// if (isValidUrl(value)) {
+		try {
+			// Remove value from input
+			target.value = '';
 
-				const { name, images, url, price } = data;
+			const response = await fetch('/api/scrape/4.0', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ value })
+			});
 
-				product.set(JSON.stringify({ name, images, url, price }));
-				// target.value = '';
-				window.location.href = '/doli/products/new';
-			} catch (error) {
-				console.error(error);
-				return 'unsuccesful response';
-			}
+			const data = await response.json();
 
-			// try {
-			// 	const result = await cheerioFunc(value);
+			// Save to local storage
+			products.set(data.searchLinks);
 
-			// 	if (!result?.name || !result?.images) {
-			// 		throw error(400, 'failed to scrape');
-			// 	}
+			const parsedProducts: string[] = JSON.parse(localStorage.getItem('products') as any);
+			await parseAndSave(parsedProducts);
 
-			// 	product.set(
-			// 		JSON.stringify({
-			// 			name: result.name,
-			// 			images: result.images,
-			// 			url: value,
-			// 			price: result.price
-			// 		})
-			// 	);
-
-			// 	target.value = '';
-			// 	window.location.reload();
-			// } catch (error) {
-			// 	console.error(error);
-			// 	return 'unsuccesful response';
-			// }
+			// product.set(JSON.stringify({ name, images, url, price }));
+			// target.value = '';
+			// window.location.href = '/doli/products/new';
+		} catch (error) {
+			console.error(error);
+			return 'unsuccesful response';
 		}
+
+		// try {
+		// 	const result = await cheerioFunc(value);
+
+		// 	if (!result?.name || !result?.images) {
+		// 		throw error(400, 'failed to scrape');
+		// 	}
+
+		// 	product.set(
+		// 		JSON.stringify({
+		// 			name: result.name,
+		// 			images: result.images,
+		// 			url: value,
+		// 			price: result.price
+		// 		})
+		// 	);
+
+		// 	target.value = '';
+		// 	window.location.reload();
+		// } catch (error) {
+		// 	console.error(error);
+		// 	return 'unsuccesful response';
+		// }
+		// }
 	}
 
 	// @ts-ignore
@@ -133,6 +153,36 @@
 		} catch (error: unknown) {
 			if (error instanceof Error) console.error(`Failed to crawl "${url}": ${error?.message}`);
 		}
+	}
+
+	async function saveToDB(url: string) {
+		try {
+			const response = await fetch('/api/scrape/4.0/scraped', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ url })
+			});
+
+			const data = await response.json();
+
+			return data;
+		} catch (error) {
+			console.error(error);
+			return 'unsuccesful response';
+		}
+	}
+
+	async function parseAndSave(parsedProducts: string[]) {
+		const saved = await saveToDB(parsedProducts[0]);
+		const saved1 = await saveToDB(parsedProducts[1]);
+		const saved2 = await saveToDB(parsedProducts[2]);
+		console.log({ saved, saved1, saved2 });
+		// parsedProducts.forEach(async (product) => {
+		// 	const saved = await saveToDB(product);
+		// 	console.log({ saved });
+		// });
 	}
 </script>
 

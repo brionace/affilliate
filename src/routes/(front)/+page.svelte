@@ -61,7 +61,7 @@
 
 <Head title="Pardycat" description="Find your next party outfit or fancy dress like a boss" />
 
-<main class="my-11">
+<main>
 	<InspirationList data={inspirations} />
 	<!-- <ProductList
 		{products}

@@ -11,7 +11,7 @@
 	const id = product?.$id ? product.$id : '';
 	const url = product?.url ? product.url : '';
 	let images = product?.images ? product.images : [];
-	let name = product?.name ? product.name : '';
+	let name = product?.name ? product.title : '';
 	let price = product?.price ? product.price : '';
 	let status = product?.status === 'published' ? 'on' : 'off';
 	let categories: number[] = product?.categories ? product.categories : [];

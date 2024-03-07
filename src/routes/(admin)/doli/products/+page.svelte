@@ -1,7 +1,9 @@
 <script>
 	import Search from '$lib/components/Search.svelte';
+	import ReCategorise from '$lib/components/ReCategorise.svelte';
 	import { product } from '$lib/utilities/store';
 	import { get } from 'svelte/store';
+	import RemoveDuplicates from '$lib/components/RemoveDuplicates.svelte';
 
 	export let data;
 	// const { products } = data;
@@ -16,6 +18,8 @@
 				product.set({ ...get(product), search: e.detail });
 			}}
 		/>
+		<ReCategorise />
+		<RemoveDuplicates />
 	</div>
 
 	{#if products}
@@ -27,7 +31,7 @@
 					>
 						{#each product.images as image, i}
 							<div class="h-[320px] w-full flex justify-center snap-center shrink-0">
-								<img src={image} alt={i === 0 ? product.name : ''} />
+								<img src={image} alt={i === 0 ? product.title : ''} />
 							</div>
 						{/each}
 					</div>
@@ -35,7 +39,7 @@
 						<div class="flex gap-4 justify-between items-start">
 							<a href={`/doli/products/${product.$id}`}>Edit</a>
 							<p>
-								{product.name}
+								{product.title}
 							</p>
 						</div>
 					</div>

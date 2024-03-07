@@ -36,7 +36,7 @@ export const actions: import('./$types').Actions = {
 	create: async ({ request, fetch }) => {
 		const data = await request.formData();
 
-		const name = data.get('name') as string;
+		const title = data.get('title') as string;
 		const price = data.get('price') as unknown as string;
 		const url = data.get('url') as unknown as URL;
 		const status = data.get('status') === 'on' ? 'published' : 'draft';
@@ -49,7 +49,7 @@ export const actions: import('./$types').Actions = {
 				headers: {
 					'Content-Type': 'application/json'
 				},
-				body: JSON.stringify({ name, price, url, images, categories, status })
+				body: JSON.stringify({ title, price, url, images, categories, status })
 			});
 
 			if (!response.ok) {

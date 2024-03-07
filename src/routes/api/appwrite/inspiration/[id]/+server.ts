@@ -27,7 +27,7 @@ export const GET = async ({ params: { id } }) => {
 			Query.limit(10),
 			Query.equal('status', 'published'),
 			// Query.offset(0),
-			Query.select(['images', 'name', 'price', 'url'])
+			Query.select(['images', 'title', 'price', 'url'])
 		];
 
 		response.categories.forEach((category: string) => {

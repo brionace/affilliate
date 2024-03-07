@@ -57,7 +57,7 @@ async function extractProductDetails(product: any) {
 						['Cosplay', 'Clothing', 'Summer']
 						
 						Product data:
-						Title: ${product.name}, Description: ${product.description}, Price: ${product.price}`
+						Title: ${product.title}, Description: ${product.description}, Price: ${product.price}`
 					},
 					max_new_tokens: 128,
 					temperature: 0
@@ -186,7 +186,7 @@ async function cheerioFunc(url: string) {
 		const data = await extractData(html);
 		const categories = await extractProductDetails(data);
 
-		return {...data, categories};
+		return { ...data, categories };
 	} catch (error: unknown) {
 		if (error instanceof Error) console.error(`Failed to crawl "${url}": ${error?.message}`);
 	}

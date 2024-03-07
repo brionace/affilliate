@@ -7,7 +7,9 @@ const INSPIRATION_DATABASE_ID = '6589ce12827946d1cad7'; // Replace with your dat
 const INSPIRATION_COLLECTION_ID = '6589fea66c02c2ea13c7'; // Replace with your collection ID
 const PRODUCTS_COLLECTION_ID = '6589ceb0749a435516e8'; // Replace with your collection ID
 
-export const GET = async () => {
+export const GET = async ({ request }) => {
+	const headers = request.headers.get('User-Agent');
+	console.log(headers);
 	const response = await databases.listDocuments(
 		INSPIRATION_DATABASE_ID,
 		INSPIRATION_COLLECTION_ID,
@@ -26,18 +28,30 @@ export const GET = async () => {
 
 	const data = await Promise.all(
 		response.documents.map(async (inspiration: any) => {
+			// console.log(
+			// 	inspiration.categories.map((category: string) => Query.search('categories', category.toString()))
+			// )
+			const categories = inspiration.categories.map((category: string) => {
+				return Query.search('categories', category.toString());
+			});
+
 			const categoriesQueries = [
 				Query.orderDesc('$updatedAt'),
-				Query.limit(5),
+				Query.limit(6),
 				// Query.offset(0),
-				Query.select(['images', 'name', 'price', 'url']),
+				Query.select(['images', 'title', 'price', 'url']),
+				// ...categories,
+				Query.search('categories', inspiration.categories.join(', ')),
 				Query.equal('status', 'published')
 			];
 
-			inspiration.categories.forEach((category: string) => {
-				categoriesQueries.push(Query.search('categories', category.toString()));
-			});
+			// inspiration.categories.forEach((category: string) => {
+			// const cat = category.toString();
+			// console.log(Query.search('categories', cat));
+			// categoriesQueries.push(Query.search('queriable', category.toString()));
+			// });
 
+			console.log(categoriesQueries);
 			const res = await databases.listDocuments(
 				INSPIRATION_DATABASE_ID,
 				PRODUCTS_COLLECTION_ID,
@@ -48,7 +62,11 @@ export const GET = async () => {
 				throw error(500, 'failed to get categories in inspirations');
 			}
 
-			return { inspiration, products: res.documents, total: res.total };
+			return {
+				inspiration,
+				products: res.documents.filter((document) => document.images[0] !== null), // hack to remove products without images because Query.isNotNull('images') doesn't work
+				total: res.total
+			};
 		})
 	);
 
@@ -81,7 +99,7 @@ export const GET = async () => {
 // 		select: {
 // 			id: true,
 // 			url: true,
-// 			name: true,
+// 			title: true,
 // 			images: true,
 // 			price: true
 // 		}
@@ -98,7 +116,7 @@ export const GET = async () => {
 // 		list: products.map((product) => {
 // 			return {
 // 				id: product.id,
-// 				name: product.name,
+// 				title: product.title,
 // 				images: JSON.parse(product.images),
 // 				url: product.url,
 // 				price: product.price,
